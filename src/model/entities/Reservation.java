@@ -11,23 +11,33 @@ public class Reservation {
 	private Integer roomNumber;
 	private Date checkIn;
 	private Date checkOut;
-	
+
 	// Metodos Especificos
 	public long duration() {
 		long diff = this.checkOut.getTime() - this.checkIn.getTime();
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
-	
-	public void updateDates(Date checkIn, Date checkOut) {
+
+	public String updateDates(Date checkIn, Date checkOut) {
+		Date now = new Date();
+
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return "Reservation dates for update must be future dates";
+		}
+		if (!checkOut.after(checkIn)) {
+			return "Check-out date must be after check-in date";
+		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		return null;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Room " + this.roomNumber + ", check-in: " + sdf.format(this.checkIn) + ", check-out: " + sdf.format(this.checkOut) + ", " + this.duration() + " nights";
+		return "Room " + this.roomNumber + ", check-in: " + sdf.format(this.checkIn) + ", check-out: "
+				+ sdf.format(this.checkOut) + ", " + this.duration() + " nights";
 	}
-	
+
 	// Metodos Especiais
 	public Reservation() {
 		super();
@@ -55,5 +65,5 @@ public class Reservation {
 	public Date getCheckOut() {
 		return checkOut;
 	}
-	
+
 }
